@@ -1,0 +1,38 @@
+{
+  "name": "backbone-blueprint",
+  "version": "0.0.2",
+  "description": "Create object hierarchies based on json schema",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "author": {
+    "name": "mikkolehtinen",
+    "email": "mikko@applifier.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Everyplay/backbone-blueprint.git"
+  },
+  "keywords": [
+    "backbone",
+    "schema",
+    "relations"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "backbone": "~1.1.0",
+    "underscore": "~1.5.2",
+    "jsonschema": "~0.4.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.13.0",
+    "chai": "~1.8.1",
+    "backbone-db": "~0.1.2",
+    "jshint": "~2.4.2"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/Everyplay/backbone-blueprint/issues"
+  }
+}
