@@ -22,8 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "backbone": "~1.1.0",
-    "underscore": "~1.5.2",
-    "jsonschema": "~0.4.0"
+    "jsonschema": "~0.4.0",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "mocha": "~1.13.0",

@@ -3,7 +3,7 @@ var Model = require('..').Model;
 var ValidatingModel = require('..').ValidatingModel;
 var Person = require('./fixtures').ValidatingPerson;
 var jsonschema = require('jsonschema');
-var _ = require('underscore');
+var _ = require('lodash');
 
 describe('Test validation', function () {
 
