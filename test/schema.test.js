@@ -1,4 +1,4 @@
-require('chai').should();
+var should = require('chai').should();
 var BaseModel = require('..').Model;
 var Schema = require('..').Schema;
 var addressSchema = require('./fixtures').addressSchema;
@@ -70,6 +70,7 @@ describe('Test schema', function () {
     var street = streetRequiredSchema.properties.street;
     street.required.should.equal(true);
     street.type.should.equal('string');
+    should.not.exist(addressSchema.properties.street.required);
   });
 
 
