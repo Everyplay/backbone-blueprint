@@ -1,6 +1,7 @@
 var should = require('chai').should();
 var Model = require('..').Model;
 var Employee = require('./fixtures').Employee;
+var EmployeeNoref = require('./fixtures').EmployeeNoref;
 var personSchema = require('./fixtures').personSchema;
 var Addresses = require('./fixtures').Addresses;
 var Schema = require('..').Schema;
@@ -22,6 +23,7 @@ describe('Test relations', function () {
     employee.get('spouse').get('id').should.equal(3300);
     should.not.exist(employee.get('spouse').get('employer'));
     employee.get('addresses').at(0).get('country').should.equal('GB');
+
     employee.toJSON({recursive: true}).employer.id.should.equal(222);
 
     var employee2 = new Employee({
@@ -143,7 +145,9 @@ describe('Test relations', function () {
     }
 
     save(function(err) {
+      should.not.exist(err);
       fetch(function(err) {
+        should.not.exist(err);
         should.not.exist(employee.get('addresses'));
         employee.get('spouse').get('id').should.equal(3300);
         done();
@@ -180,7 +184,6 @@ describe('Test relations', function () {
   });
 
   it('should format templated properties', function() {
-    var Backbone = require('backbone');
     var TestModel = Model.extend({
       url: Model.formatTemplatedProperties('/companies/{company_id}/employees/{employer_id}')
     });
@@ -276,6 +279,35 @@ describe('Test relations', function () {
     n.get('creator').title().should.equal('user1');
   });
 
+  it('should inference references from model .idAttribute', function(next) {
+    employee = new Employee({
+      id: 3340,
+      firstName: 'John',
+      surname: 'Foo',
+      company_id: 222,
+      spouse_id: 3300,
+      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+    });
+    var e = new EmployeeNoref(employee.toJSON());
+    e.get('employer_noref').should.exist;
+    e.get('employer_noref').get('id').should.equal(employee.get('company_id'));
+    next();
+  });
+
+  it('should copy relation names as role names in addition to defined names', function(next) {
+    employee = new Employee({
+      id: 3340,
+      firstName: 'John',
+      surname: 'Foo',
+      company_id: 222,
+      spouse_id: 3300,
+      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+    });
+    employee.relationDefinitions.employer.roles.should.contain('admin');
+    employee.relationDefinitions.employer.roles.should.contain('employer');
+    next();
+  });
+  
 });
 
 
