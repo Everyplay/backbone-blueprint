@@ -1,7 +1,8 @@
 var Db = require('backbone-db');
-var BaseModel = require('..').Model;
-var ValidatingModel = require('..').ValidatingModel;
-var Collection = require('..').Collection;
+var blueprint = require('..');
+var BaseModel = blueprint.Model;
+var ValidatingModel = blueprint.ValidatingModel;
+var Collection = blueprint.Collection;
 var _ = require('lodash');
 var TestDb = new Db('test');
 
@@ -52,7 +53,7 @@ var companySchema = {
 
 var Company = Model.extend({
   type: 'company',
-  schema: companySchema,
+  schema: companySchema
 });
 
 var personSchema = exports.personSchema = {
@@ -111,7 +112,7 @@ var personSchema = exports.personSchema = {
   }
 };
 
-/* var Employee = */ exports.Employee = Model.extend({
+exports.Employee = Model.extend({
   type: 'person',
   schema: personSchema
 });
@@ -131,9 +132,34 @@ exports.EmployeeNoref = exports.Employee.extend({
   schema: schemaNoRef
 });
 
-
-
-/* var ValidatingPerson = */ exports.ValidatingPerson = ValidatingModel.extend({
+exports.ValidatingPerson = ValidatingModel.extend({
   type: 'person',
   schema: personSchema
+});
+
+var FooCompany = Company.extend({
+  type: 'foo_company'
+});
+
+var dynamicSchema = blueprint.Schema.extendSchema(personSchema, {
+  properties : {
+    dynamic_relation: {
+      type: 'relation',
+      model: function(attrs) {
+        if (attrs.type === 'foo') {
+          return new FooCompany(attrs);
+        }
+        return new Company(attrs);
+      },
+      references: {
+        id: 'company_id',
+        type: 'company_type'
+      }
+    }
+  }
+});
+
+exports.DynamicRelationModel = Model.extend({
+  type: 'dynamic',
+  schema: dynamicSchema
 });

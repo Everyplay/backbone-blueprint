@@ -1,9 +1,10 @@
 var should = require('chai').should();
 var Model = require('..').Model;
-var Employee = require('./fixtures').Employee;
-var EmployeeNoref = require('./fixtures').EmployeeNoref;
-var personSchema = require('./fixtures').personSchema;
-var Addresses = require('./fixtures').Addresses;
+var fixtures = require('./fixtures');
+var Employee = fixtures.Employee;
+var EmployeeNoref = fixtures.EmployeeNoref;
+var personSchema = fixtures.personSchema;
+var Addresses = fixtures.Addresses;
 var Schema = require('..').Schema;
 
 describe('Test relations', function() {
@@ -299,7 +300,6 @@ describe('Test relations', function() {
       }
     };
 
-
     var User = Employee.extend({
       type: 'user',
       schema: schema,
@@ -371,4 +371,12 @@ describe('Test relations', function() {
     next();
   });
 
+  it('should test relation, which is dependent on other attributes', function() {
+    var dynamicModel = new fixtures.DynamicRelationModel({
+      company_type: 'foo',
+      company_id: 1
+    });
+    should.exist(dynamicModel.get('dynamic_relation'));
+    dynamicModel.get('dynamic_relation').type.should.equal('foo_company');
+  });
 });
