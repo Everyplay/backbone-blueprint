@@ -2,7 +2,7 @@ var Db = require('backbone-db');
 var BaseModel = require('..').Model;
 var ValidatingModel = require('..').ValidatingModel;
 var Collection = require('..').Collection;
-
+var _ = require('lodash');
 var TestDb = new Db('test');
 
 var Model = BaseModel.extend({
@@ -87,6 +87,7 @@ var personSchema = exports.personSchema = {
     employer: {
       type: 'relation',
       model: Company,
+      roles: ['admin'],
       references: {id: 'company_id'}
     },
     spouse: {
@@ -110,12 +111,29 @@ var personSchema = exports.personSchema = {
   }
 };
 
-var Employee = exports.Employee = Model.extend({
+/* var Employee = */ exports.Employee = Model.extend({
   type: 'person',
   schema: personSchema
 });
 
-var ValidatingPerson = exports.ValidatingPerson = ValidatingModel.extend({
+var schemaNoRef = _.extend(personSchema,  {
+    id: '/schemas/person_noref',
+    properties: _.extend(personSchema.properties, {
+      employer_noref: {
+        type: 'relation',
+        model: Company
+      }
+    })
+});
+
+exports.EmployeeNoref = exports.Employee.extend({
+  type: 'person',
+  schema: schemaNoRef
+});
+
+
+
+/* var ValidatingPerson = */ exports.ValidatingPerson = ValidatingModel.extend({
   type: 'person',
   schema: personSchema
 });

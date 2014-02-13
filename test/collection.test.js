@@ -1,4 +1,4 @@
-var should = require('chai').should();
+require('chai').should();
 var Model = require('..').Model;
 var Collection = require('..').Collection;
 
@@ -9,7 +9,7 @@ describe('Test Collection', function () {
   });
 
   it('should init Collection', function() {
-    var collection = new Collection();
+    var collection = new TestCollection();
     collection.length.should.equal(0);
   });
 });
