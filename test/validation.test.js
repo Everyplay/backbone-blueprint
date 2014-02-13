@@ -5,7 +5,7 @@ var Person = require('./fixtures').ValidatingPerson;
 var jsonschema = require('jsonschema');
 var _ = require('lodash');
 
-describe('Test validation', function () {
+describe('Test validation', function() {
 
   it('should not validate with invalid data', function() {
     var employee = new Person({});
@@ -15,20 +15,24 @@ describe('Test validation', function () {
   });
 
   it('model should be valid', function() {
-    var employee = new Person({firstName: 'Foo'});
+    var employee = new Person({
+      firstName: 'Foo'
+    });
     employee.isValid().should.equal(true);
   });
 
   it('should add custom validator', function() {
     var validator = Person.prototype.validator;
     validator.attributes.contains = function validateContains(instance, schema, options, ctx) {
-      if(typeof instance !== 'string') return;
-      if(typeof schema.contains !== 'string') throw new jsonschema.SchemaError('"contains" expects a string', schema);
-      if(instance.indexOf(schema.contains) < 0) {
-        return 'does not contain the string '+ JSON.stringify(schema.contains);
+      if (typeof instance !== 'string') return;
+      if (typeof schema.contains !== 'string') throw new jsonschema.SchemaError('"contains" expects a string', schema);
+      if (instance.indexOf(schema.contains) < 0) {
+        return 'does not contain the string ' + JSON.stringify(schema.contains);
       }
     };
-    var employee = new Person({firstName: 'Foo'});
+    var employee = new Person({
+      firstName: 'Foo'
+    });
     var errors = employee.validate();
     errors.length.should.be.above(0);
   });
@@ -53,7 +57,9 @@ describe('Test validation', function () {
       type: 'foo',
       schema: schema
     });
-    var f = new Foo({data: 'a'});
+    var f = new Foo({
+      data: 'a'
+    });
     var errors = f.validate();
     errors.length.should.equal(1);
   });
@@ -63,10 +69,12 @@ describe('Test validation', function () {
       customValidation: function(attributes, options) {
         var err = new Error('must be enabled');
         err.stack = 'must be enabled';
-        if(!attributes.enabled) return [err];
+        if (!attributes.enabled) return [err];
       }
     });
-    var f = new Foo({firstName: 'Faa'});
+    var f = new Foo({
+      firstName: 'Faa'
+    });
     var errors = f.validate();
     errors.length.should.equal(1);
     var errMsg = _.pluck(errors, 'stack').join();

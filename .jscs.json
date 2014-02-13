@@ -1,0 +1,16 @@
+{
+    "requireCurlyBraces": ["else", "for", "while", "do", "try", "catch"],
+    "requireSpaceAfterKeywords": ["if", "else", "for", "while", "do", "switch", "return", "try", "catch"],
+    "disallowLeftStickedOperators": ["?", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
+    "disallowRightStickedOperators": ["?", "+", "/", "*", ":", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
+    "requireLeftStickedOperators": [","],
+    "disallowKeywords": ["with"],
+    "disallowKeywordsOnNewLine": ["else"],
+    "disallowTrailingWhitespace": true,
+    "maximumLineLength": 120,
+    "excludeFiles": ["node_modules/**", "coverage/**"],
+    "validateJSDoc": {
+        "checkParamNames": true,
+        "requireParamTypes": false
+    }
+}

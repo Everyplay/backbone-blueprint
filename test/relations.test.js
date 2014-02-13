@@ -6,7 +6,7 @@ var personSchema = require('./fixtures').personSchema;
 var Addresses = require('./fixtures').Addresses;
 var Schema = require('..').Schema;
 
-describe('Test relations', function () {
+describe('Test relations', function() {
   var employee;
 
   it('should create relations', function() {
@@ -16,7 +16,11 @@ describe('Test relations', function () {
       surname: 'Foo',
       company_id: 222,
       spouse_id: 3300,
-      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
     });
     employee.get('title').should.equal('mr');
     employee.get('employer').get('id').should.equal(222);
@@ -24,7 +28,9 @@ describe('Test relations', function () {
     should.not.exist(employee.get('spouse').get('employer'));
     employee.get('addresses').at(0).get('country').should.equal('GB');
 
-    employee.toJSON({recursive: true}).employer.id.should.equal(222);
+    employee.toJSON({
+      recursive: true
+    }).employer.id.should.equal(222);
 
     var employee2 = new Employee({
       id: 3341,
@@ -34,7 +40,11 @@ describe('Test relations', function () {
     should.not.exist(employee2.get('addresses'));
     should.not.exist(employee2.get('employer'));
     should.not.exist(employee2.get('spouse'));
-    employee2.set('addresses', [{street: 'Baker Street', city: 'London', country: 'GB'}]);
+    employee2.set('addresses', [{
+      street: 'Baker Street',
+      city: 'London',
+      country: 'GB'
+    }]);
     employee2.get('addresses').at(0).should.be.ok;
     employee2.set('spouse_id', 3333);
     employee2.get('spouse').get('id').should.equal(3333);
@@ -47,7 +57,9 @@ describe('Test relations', function () {
       removeFields: ['addresses']
     };
     // test without projection set
-    var json = employee.toJSON({recursive: true});
+    var json = employee.toJSON({
+      recursive: true
+    });
     should.exist(json.spouse.enabled);
     should.exist(json.spouse.title);
     should.exist(json.addresses);
@@ -55,7 +67,10 @@ describe('Test relations', function () {
     should.exist(json.employer.name);
 
     // test /w projection
-    json = employee.toJSON({recursive: true, projection: projection});
+    json = employee.toJSON({
+      recursive: true,
+      projection: projection
+    });
     should.exist(json.spouse.title);
     should.not.exist(json.spouse.enabled);
     should.not.exist(json.addresses);
@@ -66,7 +81,10 @@ describe('Test relations', function () {
     projection = {
       onlyFields: ['firstName', 'surname', 'spouse']
     };
-    json = employee.toJSON({recursive: true, projection: projection});
+    json = employee.toJSON({
+      recursive: true,
+      projection: projection
+    });
     Object.keys(json).length.should.equal(3);
 
     // test /w schema projection
@@ -88,7 +106,10 @@ describe('Test relations', function () {
     projection = {
       addresses: ['street']
     };
-    json = employee.toJSON({recursive: true, projection: projection});
+    json = employee.toJSON({
+      recursive: true,
+      projection: projection
+    });
     json.addresses.length.should.equal(1);
     var address = json.addresses[0];
     Object.keys(address).length.should.equal(1);
@@ -99,7 +120,10 @@ describe('Test relations', function () {
       addresses: 'mini',
       spouse: 'mini'
     };
-    json = employee.toJSON({recursive: true, projection: projection});
+    json = employee.toJSON({
+      recursive: true,
+      projection: projection
+    });
     json.addresses.length.should.equal(1);
     address = json.addresses[0];
     Object.keys(address).length.should.equal(1);
@@ -117,7 +141,11 @@ describe('Test relations', function () {
       surname: 'Foo',
       company_id: 222,
       spouse_id: 3300,
-      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
     });
 
     function save(cb) {
@@ -133,7 +161,9 @@ describe('Test relations', function () {
     }
 
     function fetch(cb) {
-      employee = new Employee({id: id});
+      employee = new Employee({
+        id: id
+      });
       employee.fetch({
         success: function() {
           cb();
@@ -164,11 +194,13 @@ describe('Test relations', function () {
         id: {
           type: 'integer'
         },
-        addresses : {
+        addresses: {
           type: 'relation',
           collection: Addresses,
           default: [],
-          references: {id: 'company_id'}
+          references: {
+            id: 'company_id'
+          }
         }
       }
     };
@@ -176,7 +208,9 @@ describe('Test relations', function () {
       type: 'foo',
       schema: schema
     });
-    var f = new Foo({company_id: 'xyz'});
+    var f = new Foo({
+      company_id: 'xyz'
+    });
     var addresses = f.get('addresses');
     should.exist(addresses);
     addresses.length.should.equal(0);
@@ -187,7 +221,10 @@ describe('Test relations', function () {
     var TestModel = Model.extend({
       url: Model.formatTemplatedProperties('/companies/{company_id}/employees/{employer_id}')
     });
-    var test = new TestModel({company_id: 222, employer_id: 11});
+    var test = new TestModel({
+      company_id: 222,
+      employer_id: 11
+    });
     test.url().should.equal('/companies/222/employees/11');
   });
 
@@ -202,7 +239,9 @@ describe('Test relations', function () {
         manager: {
           type: 'relation',
           model: Manager,
-          references: {id: 'manager_id'}
+          references: {
+            id: 'manager_id'
+          }
         }
       }
     });
@@ -217,14 +256,22 @@ describe('Test relations', function () {
         subordinate: {
           type: 'relation',
           model: Engineer,
-          references: {id: 'subordinate_id'}
+          references: {
+            id: 'subordinate_id'
+          }
         }
       }
     });
     Manager.prototype.changeSchema(managerSchema);
 
-    var engineer = new Engineer({id: 1, manager_id: 2});
-    var manager = new Manager({id: 2, subordinate_id: 1});
+    var engineer = new Engineer({
+      id: 1,
+      manager_id: 2
+    });
+    var manager = new Manager({
+      id: 2,
+      subordinate_id: 1
+    });
     engineer.title().should.equal('engineer1');
     manager.title().should.equal('manager2');
     engineer.get('manager').id.should.equal(2);
@@ -245,7 +292,9 @@ describe('Test relations', function () {
         creator: {
           type: 'relation',
           model: Parent,
-          references: {id: 'relation_id'}
+          references: {
+            id: 'relation_id'
+          }
         }
       }
     };
@@ -264,7 +313,9 @@ describe('Test relations', function () {
         creator: {
           type: 'relation',
           model: User,
-          references: {id: 'relation_id'}
+          references: {
+            id: 'relation_id'
+          }
         }
       }
     });
@@ -273,9 +324,13 @@ describe('Test relations', function () {
       schema: newSchema
     });
 
-    var u = new User({relation_id: 1});
+    var u = new User({
+      relation_id: 1
+    });
     u.get('creator').title().should.equal('parent1');
-    var n = new NewUser({relation_id: 1});
+    var n = new NewUser({
+      relation_id: 1
+    });
     n.get('creator').title().should.equal('user1');
   });
 
@@ -286,7 +341,11 @@ describe('Test relations', function () {
       surname: 'Foo',
       company_id: 222,
       spouse_id: 3300,
-      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
     });
     var e = new EmployeeNoref(employee.toJSON());
     e.get('employer_noref').should.exist;
@@ -301,13 +360,15 @@ describe('Test relations', function () {
       surname: 'Foo',
       company_id: 222,
       spouse_id: 3300,
-      addresses: [{street: 'Baker Street', city: 'London', country: 'GB'}]
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
     });
     employee.relationDefinitions.employer.roles.should.contain('admin');
     employee.relationDefinitions.employer.roles.should.contain('employer');
     next();
   });
-  
+
 });
-
-
