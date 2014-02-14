@@ -20,6 +20,10 @@ describe('Test schema', function () {
       nohtml:  {
         type: 'sanitized_string'
       },
+      nohtmlInJSONOutput: {
+        type: 'string',
+        sanitize: true
+      },
       foo: {
         type: 'string',
         convert: function(attribute) {
@@ -67,6 +71,25 @@ describe('Test schema', function () {
     model.get('foo').should.equal('foo-bar');
     model.get('nohtml').should.equal('<a><iframe></iframe><a>X&amp;S&amp;S</a></a>');
   });
+
+  it('should sanitize attribute in output', function() {
+    var model = new TestModel({
+      id: '123',
+      foo: 'bar',
+      nohtmlInJSONOutput: '<a onmouseover="javascript:alert()" href="javascript:alert()">' +
+        '<script type="text/javascript">alert("kissa")</script>' +
+        '<iframe src="http://google.com"></iframe><a style="font-size: 1000px" href="test">X&S&S</a></a>'
+    });
+    (typeof model.get('id')).should.equal('number');
+    model.get('foo').should.equal('foo-bar');
+    model.get('nohtmlInJSONOutput').should.equal('<a onmouseover="javascript:alert()" href="javascript:alert()">' +
+      '<script type="text/javascript">alert("kissa")</script>' +
+      '<iframe src="http://google.com"></iframe><a style="font-size: 1000px" href="test">X&S&S</a></a>');
+
+    model.toJSON().nohtmlInJSONOutput.should.equal('<a><iframe></iframe><a>X&amp;S&amp;S</a></a>');
+
+  });
+
 
   it('should extend schema', function() {
     var newSchema = {
