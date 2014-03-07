@@ -133,6 +133,17 @@ describe('Test relations', function() {
     var spouse = json.spouse;
     should.exist(spouse.id);
     should.not.exist(spouse.enabled);
+
+    projection = {
+      onlyFields: ['firstName', 'surname', 'spouse'],
+      spouse: ['id']
+    };
+    json = employee.toJSON({
+      recursive: true,
+      projection: projection
+    });
+    should.exist(json.spouse.id);
+    should.not.exist(json.spouse.title);
   });
 
   it('should not save relations, unless specified so', function(done) {
