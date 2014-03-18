@@ -109,6 +109,10 @@ var personSchema = exports.personSchema = {
     full: {
       employer: ['id', 'name']
     }
+  },
+  defaultProjectionOptions: {
+    recursive: true,
+    projection: 'mini'
   }
 };
 

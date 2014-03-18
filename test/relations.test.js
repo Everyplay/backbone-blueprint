@@ -144,6 +144,19 @@ describe('Test relations', function() {
     });
     should.exist(json.spouse.id);
     should.not.exist(json.spouse.title);
+
+    // test default projection options
+    var projectionOpts = employee.defaultProjectionOptions();
+    projectionOpts.recursive.should.equal(true);
+    json = employee.toJSON(projectionOpts);
+    should.not.exist(json.employer.id);
+    should.exist(json.employer.name);
+  });
+
+  it('should override defaultProjectionOptions with options given when constructing', function() {
+    var emp = new Employee({}, {defaultProjectionOptions: {recursive: false, projection: 'foo'}});
+    var opts = emp.defaultProjectionOptions();
+    opts.projection.should.equal('foo');
   });
 
   it('should not save relations, unless specified so', function(done) {
