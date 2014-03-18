@@ -159,6 +159,14 @@ describe('Test relations', function() {
     opts.projection.should.equal('foo');
   });
 
+  it('should create json from cyclic dependencies', function() {
+    var spouse = new Employee({id: 6});
+    var emp = new Employee({id: 7, spouse: spouse});
+    spouse.set('spouse', emp);
+    var json = emp.toJSON({recursive: true});
+    should.exist(json.spouse.id);
+  });
+
   it('should not save relations, unless specified so', function(done) {
     var id;
     var employee = new Employee({
