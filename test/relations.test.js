@@ -25,6 +25,7 @@ describe('Test relations', function() {
     });
     employee.get('title').should.equal('mr');
     employee.get('employer').get('id').should.equal(222);
+    employee.get('employer').parent.should.equal(employee);
     employee.get('spouse').get('id').should.equal(3300);
     should.not.exist(employee.get('spouse').get('employer'));
     employee.get('addresses').at(0).get('country').should.equal('GB');
@@ -180,8 +181,6 @@ describe('Test relations', function() {
         country: 'GB'
       }]
     });
-
-    employee.get('company').parent.should.equal(employee);
 
     function save(cb) {
       employee.save(null, {
