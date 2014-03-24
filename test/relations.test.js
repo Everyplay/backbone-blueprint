@@ -149,6 +149,8 @@ describe('Test relations', function() {
       }]
     });
 
+    employee.get('company').parent.should.equal(employee);
+
     function save(cb) {
       employee.save(null, {
         success: function() {

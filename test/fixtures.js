@@ -53,7 +53,11 @@ var companySchema = {
 
 var Company = Model.extend({
   type: 'company',
-  schema: companySchema
+  schema: companySchema,
+  initialize: function (attrs, options) {
+    Company.__super__.initialize.call(this, attrs, options);
+    this.parent = options.parent;
+  }
 });
 
 var personSchema = exports.personSchema = {
