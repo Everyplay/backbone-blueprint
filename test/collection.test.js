@@ -1,4 +1,4 @@
-require('chai').should();
+var should = require('chai').should();
 var fixtures = require('./fixtures');
 var Employee = fixtures.Employee;
 var Collection = require('..').Collection;
@@ -42,5 +42,24 @@ describe('Test Collection', function () {
   it('collection should have default projection options', function() {
     var opts = collection.defaultProjectionOptions();
     opts.recursive.should.equal(true);
+  });
+
+  it('collection projection options can be defined in collection definition', function() {
+    var ACollection = TestCollection.extend({
+      defaultProjectionOptions: function() {
+        return {
+          projection: {
+            onlyFields: ['foo']
+          }
+        };
+      }
+    });
+    var c = new ACollection();
+    should.exist(c.defaultProjectionOptions().projection.onlyFields);
+  });
+
+  it('collection defaultProjectionOptions should default to model`s options', function() {
+    var c = new TestCollection();
+    c.defaultProjectionOptions().projection.should.equal('mini');
   });
 });
