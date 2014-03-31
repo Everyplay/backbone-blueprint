@@ -2,6 +2,7 @@ var should = require('chai').should();
 var fixtures = require('./fixtures');
 var Employee = fixtures.Employee;
 var Collection = require('..').Collection;
+var _ = require('lodash');
 
 describe('Test Collection', function () {
   var TestCollection = Collection.extend({
@@ -61,5 +62,43 @@ describe('Test Collection', function () {
   it('collection defaultProjectionOptions should default to model`s options', function() {
     var c = new TestCollection();
     c.defaultProjectionOptions().projection.should.equal('mini');
+  });
+
+  it('collection should apply projection', function() {
+    var c = new TestCollection();
+    var m = new Employee({
+      id: 3340,
+      firstName: 'John',
+      surname: 'Foo',
+      company_id: 222,
+      spouse_id: 3341,
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
+    });
+    var m2 = new Employee({
+      id: 3341,
+      firstName: 'Jane',
+      surname: 'Foo',
+      company_id: 222,
+      spouse_id: 3340,
+      addresses: [{
+        street: 'Baker Street',
+        city: 'London',
+        country: 'GB'
+      }]
+    });
+    var company = new fixtures.Company({name: 'Foo inc.', id: 222});
+    m.set('employer', company);
+    m2.set('employer', company);
+    c.add(m);
+    c.add(m2);
+    var json = c.toJSON({projection: 'minimal', recursive: true});
+    _.each(json, function(o) {
+      should.exist(o.employer.name);
+      should.not.exist(o.employer.id);
+    });
   });
 });

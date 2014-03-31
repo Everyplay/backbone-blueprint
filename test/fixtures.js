@@ -48,10 +48,15 @@ var companySchema = {
       type: 'integer'
     },
     name: { type: 'string' }
+  },
+  projection: {
+    minimal: {
+      onlyFields: ['name']
+    }
   }
 };
 
-var Company = Model.extend({
+var Company = exports.Company = Model.extend({
   type: 'company',
   schema: companySchema,
   initialize: function (attrs, options) {
@@ -112,6 +117,9 @@ var personSchema = exports.personSchema = {
     },
     full: {
       employer: ['id', 'name']
+    },
+    minimal: {
+      onlyFields: ['firstName', 'employer']
     }
   },
   defaultProjectionOptions: {
