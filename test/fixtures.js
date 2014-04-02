@@ -55,6 +55,7 @@ var Company = Model.extend({
   type: 'company',
   schema: companySchema,
   initialize: function (attrs, options) {
+    options = options || {};
     Company.__super__.initialize.call(this, attrs, options);
     this.parent = options.parent;
   }
