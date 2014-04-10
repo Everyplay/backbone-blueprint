@@ -2,9 +2,9 @@ var should = require('chai').should();
 var fixtures = require('./fixtures');
 var _ = require('lodash');
 
-describe('Test Virtual fields', function () {
+describe('Test virtualProperties', function () {
   var Model = fixtures.Employee.extend({
-    virtuals: {
+    virtualProperties: {
       fullname: function() {
         return this.get('title') + ' '
           + this.get('firstName') + ' '
@@ -29,5 +29,10 @@ describe('Test Virtual fields', function () {
   it('should include fullname in JSON', function() {
     var json = model.toJSON();
     json.fullname.should.equal('Mr. James Bond');
+  });
+
+  it('should change fullname', function() {
+    model.set('surname', 'Blunt');
+    model.get('fullname').should.equal('Mr. James Blunt');
   });
 });
