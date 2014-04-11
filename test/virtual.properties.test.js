@@ -28,7 +28,7 @@ describe('Test virtualProperties', function () {
     });
 
     it('should include fullname in JSON', function() {
-      var json = model.toJSON();
+      var json = model.toJSON({includeVirtualProperties: true});
       json.fullname.should.equal('Mr. James Bond');
     });
 
@@ -83,6 +83,10 @@ describe('Test virtualProperties', function () {
       model.get('id').should.equal(1);
     });
 
+    it('should include fullname in JSON', function() {
+      var json = model.toJSON({includeVirtualProperties: ['fullname']});
+      json.fullname.should.equal('Mr. New Name');
+    });
   });
 
 });
