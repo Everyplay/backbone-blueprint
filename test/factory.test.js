@@ -35,6 +35,10 @@ var schema1 = {
       },
       roles: ['owner']
     },
+    dyn: {
+      type: 'object',
+      $ref: 'schemas/foo3'
+    },
     coll: {
       type: 'array',
       $ref: 'schemas/foo3',
@@ -129,6 +133,7 @@ describe('Test SchemaFactory', function () {
   it('should init Collection reference', function() {
     var Model = factory.create(schema1);
     var m = new Model({name: 'test', foo2_id: 1, coll_id: 2});
+    //console.log(JSON.stringify(m.schema, null, 2));
     m.get('enabled').should.equal(false);
     var coll = m.get('coll');
     should.exist(coll.length);
