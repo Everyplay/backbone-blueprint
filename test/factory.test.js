@@ -97,6 +97,11 @@ describe('Test SchemaFactory', function () {
       return 'foo';
     },
     overrideProperties: {
+      id: {
+        convert: function(value) {
+          return Number(value);
+        }
+      },
       dyn: {
         model: function(attrs) {
           return new Foo2BaseModel();
@@ -138,7 +143,9 @@ describe('Test SchemaFactory', function () {
   });
 
   it('should test schema properties', function() {
-    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true'});
+    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true', id: '11'});
+    m.schema.properties.id.convert.should.be.an.Function;
+    m.id.should.equal(11);
     var barDef = m.schema.properties.bar;
     barDef.name.should.equal('bars');
   });
