@@ -13,6 +13,14 @@ var schema1 = {
     name: {
       type: 'string'
     },
+    enabled: {
+      type: 'boolean',
+      default: false
+    },
+    created_at: {
+      type: 'date',
+      default: 'now'
+    },
     foo2_id: {
       type: 'number'
     },
@@ -24,13 +32,14 @@ var schema1 = {
       $ref: 'schemas/foo2',
       references: {
         id: 'foo2_id'
-      }
+      },
+      roles: ['owner']
     },
     coll: {
       type: 'array',
       $ref: 'schemas/foo3',
       references: {
-        id: 'coll_id'
+        coll_id: 'coll_id'
       }
     }
   }
@@ -67,6 +76,13 @@ describe('Test SchemaFactory', function () {
   var FooBaseModel = BaseModel.extend({
     identify: function() {
       return 'foo';
+    },
+    overrideProperties: {
+      dyn: function(attrs) {
+        if (attrs.enabled) {
+          console.log('ff');
+        }
+      }
     }
   });
   var Foo2BaseModel = BaseModel.extend({
@@ -76,6 +92,9 @@ describe('Test SchemaFactory', function () {
   });
 
   var Foo3BaseCollection = BaseCollection.extend({
+    initialize: function(models, options) {
+      this.coll_id = options.coll_id;
+    },
     identify: function() {
       return 'foo3collection';
     }
@@ -94,9 +113,11 @@ describe('Test SchemaFactory', function () {
   it('should init Model references', function() {
     var Model = factory.create(schema1);
     var Model2 = factory.create(schema2);
-    var m = new Model({name: 'test', foo2_id: 1});
+    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true'});
     m.identify().should.equal('foo');
     m.schema.id.should.equal(schema1.id);
+    m.get('created_at').should.be.an.Date;
+    m.get('enabled').should.equal(true);
     var m2 = new Model2({value: 'bar'});
     m2.schema.id.should.equal(schema2.id);
     var bar = m.get('bar');
@@ -108,8 +129,10 @@ describe('Test SchemaFactory', function () {
   it('should init Collection reference', function() {
     var Model = factory.create(schema1);
     var m = new Model({name: 'test', foo2_id: 1, coll_id: 2});
+    m.get('enabled').should.equal(false);
     var coll = m.get('coll');
     should.exist(coll.length);
     coll.identify().should.equal('foo3collection');
+    coll.coll_id.should.equal(2);
   });
 });
