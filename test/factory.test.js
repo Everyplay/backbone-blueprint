@@ -32,7 +32,8 @@ var schema1 = {
       type: 'object',
       $ref: 'schemas/foo2',
       references: {
-        id: 'foo2_id'
+        id: 'foo2_id',
+        parent_id: 'id'
       },
       roles: ['owner'],
       mount: true,
@@ -62,15 +63,18 @@ var schema2 = {
     id: {
       type: 'number'
     },
+    parent_id: {
+      type: 'number'
+    },
     value: {
       type: 'string'
     },
-    /*parent: {
+    parent: {
       $ref: 'schemas/foo1',
       references: {
         id: 'parent_id'
       }
-    }*/
+    }
   }
 };
 
@@ -140,7 +144,7 @@ describe('Test SchemaFactory', function () {
   });
 
   it('should init Model references', function() {
-    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true'});
+    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true', id: 99});
     m.identify().should.equal('foo');
     m.schema.id.should.equal(schema1.id);
     m.get('created_at').should.be.an.Date;
@@ -151,6 +155,8 @@ describe('Test SchemaFactory', function () {
     bar.id.should.equal(1);
     bar.schema.id.should.equal(schema2.id);
     bar.identify().should.equal('foo2');
+    bar.get('parent').identify().should.equal('foo');
+    bar.get('parent').id.should.equal(m.id);
   });
 
   it('should init Collection reference', function() {
