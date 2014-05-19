@@ -11,7 +11,8 @@ var schema1 = {
       type: 'number'
     },
     name: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
     enabled: {
       type: 'boolean',
@@ -33,7 +34,9 @@ var schema1 = {
       references: {
         id: 'foo2_id'
       },
-      roles: ['owner']
+      roles: ['owner'],
+      mount: true,
+      name: 'bars'
     },
     dyn: {
       type: 'object',
@@ -61,7 +64,13 @@ var schema2 = {
     },
     value: {
       type: 'string'
-    }
+    },
+    /*parent: {
+      $ref: 'schemas/foo1',
+      references: {
+        id: 'parent_id'
+      }
+    }*/
   }
 };
 
@@ -79,7 +88,6 @@ var schema3 = {
 };
 
 describe('Test SchemaFactory', function () {
-  var factory;
   var FooBaseModel = BaseModel.extend({
     identify: function() {
       return 'foo';
@@ -106,6 +114,9 @@ describe('Test SchemaFactory', function () {
       return 'foo3collection';
     }
   });
+  var factory;
+  var Model;
+  var Model2;
 
   before(function() {
     factory = new SchemaFactory();
@@ -117,9 +128,18 @@ describe('Test SchemaFactory', function () {
     factory.register(schema3, {baseCollection: Foo3BaseCollection});
   });
 
+  it('should create Model classes', function() {
+    Model = factory.create(schema1);
+    Model2 = factory.create(schema2);
+  });
+
+  it('should test schema properties', function() {
+    var m = new Model({name: 'test', foo2_id: 1, enabled: 'true'});
+    var barDef = m.schema.properties.bar;
+    barDef.name.should.equal('bars');
+  });
+
   it('should init Model references', function() {
-    var Model = factory.create(schema1);
-    var Model2 = factory.create(schema2);
     var m = new Model({name: 'test', foo2_id: 1, enabled: 'true'});
     m.identify().should.equal('foo');
     m.schema.id.should.equal(schema1.id);
@@ -134,9 +154,7 @@ describe('Test SchemaFactory', function () {
   });
 
   it('should init Collection reference', function() {
-    var Model = factory.create(schema1);
     var m = new Model({name: 'test', foo2_id: 1, coll_id: 2});
-    //console.log(JSON.stringify(m.schema, null, 2));
     m.get('enabled').should.equal(false);
     var coll = m.get('coll');
     should.exist(coll.length);
