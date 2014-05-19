@@ -37,7 +37,10 @@ var schema1 = {
     },
     dyn: {
       type: 'object',
-      $ref: 'schemas/foo3'
+      $ref: 'schemas/foo3',
+      references: {
+        id: 'foo2_id'
+      }
     },
     coll: {
       type: 'array',
@@ -82,9 +85,9 @@ describe('Test SchemaFactory', function () {
       return 'foo';
     },
     overrideProperties: {
-      dyn: function(attrs) {
-        if (attrs.enabled) {
-          console.log('ff');
+      dyn: {
+        model: function(attrs) {
+          return new Foo2BaseModel();
         }
       }
     }
@@ -139,5 +142,6 @@ describe('Test SchemaFactory', function () {
     should.exist(coll.length);
     coll.identify().should.equal('foo3collection');
     coll.coll_id.should.equal(2);
+    m.get('dyn').identify().should.equal('foo2');
   });
 });
