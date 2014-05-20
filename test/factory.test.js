@@ -142,12 +142,29 @@ describe('Test SchemaFactory', function () {
       return 'foo3collection';
     }
   });
+
+  var Foo4BaseCollection = BaseCollection.extend({
+    identify: function() {
+      return 'foo4collection';
+    }
+  });
+
+  var CustomFactory = SchemaFactory.extend({
+    _getBaseCollectionForSchemaId: function(schemaId, options) {
+      options = options || {};
+      if (schemaId === 'schemas/foo4' && options.propertyName === 'parents') {
+        return Foo4BaseCollection;
+      }
+      return CustomFactory.__super__._getBaseCollectionForSchemaId.apply(this, arguments);
+    }
+  });
+
   var factory;
   var Model;
   var Model2;
 
   before(function() {
-    factory = new SchemaFactory();
+    factory = new CustomFactory();
   });
 
   it('should register schemas', function() {
@@ -208,5 +225,6 @@ describe('Test SchemaFactory', function () {
     m.schema.properties.parents.collection.should.be.an.Function;
     m.schema.properties.parents.default.should.be.an.Array;
     should.exist(m.get('parents'));
+    m.get('parents').identify().should.equal('foo4collection');
   });
 });
