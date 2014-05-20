@@ -49,6 +49,7 @@ var schema1 = {
     coll: {
       type: 'array',
       $ref: 'schemas/foo3',
+      default: [],
       references: {
         coll_id: 'coll_id'
       }
@@ -87,6 +88,24 @@ var schema3 = {
     },
     number: {
       type: 'string'
+    }
+  }
+};
+
+var schema4 = {
+  id: 'schemas/foo4',
+  type: 'object',
+  properties: {
+    id: {
+      type: 'number'
+    },
+    parents: {
+      type: 'array',
+      $ref: '#',
+      default: [],
+      references: {
+        child_id: 'id'
+      }
     }
   }
 };
@@ -135,6 +154,7 @@ describe('Test SchemaFactory', function () {
     factory.register(schema1, {baseModel: FooBaseModel});
     factory.register(schema2, {baseModel: Foo2BaseModel});
     factory.register(schema3, {baseCollection: Foo3BaseCollection});
+    factory.register(schema4);
   });
 
   it('should create Model classes', function() {
@@ -174,5 +194,19 @@ describe('Test SchemaFactory', function () {
     coll.identify().should.equal('foo3collection');
     coll.coll_id.should.equal(2);
     m.get('dyn').identify().should.equal('foo2');
+  });
+
+  it('should init collection reference if default is []', function() {
+    var m = new Model();
+    m.get('coll').length.should.equal(0);
+  });
+
+  it('should init model with self referencing collection', function() {
+    var Model3 = factory.create(schema4);
+    var m = new Model3({id: 1});
+    m.schema.properties.parents.type.should.equal('relation');
+    m.schema.properties.parents.collection.should.be.an.Function;
+    m.schema.properties.parents.default.should.be.an.Array;
+    should.exist(m.get('parents'));
   });
 });
