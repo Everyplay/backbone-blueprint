@@ -97,7 +97,8 @@ var schema4 = {
   type: 'object',
   properties: {
     id: {
-      type: 'number'
+      type: 'number',
+      default: 0
     },
     parents: {
       type: 'array',
@@ -162,6 +163,7 @@ describe('Test SchemaFactory', function () {
   var factory;
   var Model;
   var Model2;
+  var Model3;
 
   before(function() {
     factory = new CustomFactory();
@@ -177,6 +179,7 @@ describe('Test SchemaFactory', function () {
   it('should create Model classes', function() {
     Model = factory.create(schema1);
     Model2 = factory.create(schema2);
+    Model3 = factory.create(schema4);
   });
 
   it('should test schema properties', function() {
@@ -219,12 +222,43 @@ describe('Test SchemaFactory', function () {
   });
 
   it('should init model with self referencing collection', function() {
-    var Model3 = factory.create(schema4);
     var m = new Model3({id: 1});
     m.schema.properties.parents.type.should.equal('relation');
     m.schema.properties.parents.collection.should.be.an.Function;
     m.schema.properties.parents.default.should.be.an.Array;
     should.exist(m.get('parents'));
     m.get('parents').identify().should.equal('foo4collection');
+  });
+
+  it('should override schema properties', function() {
+    var Base4 = Model.extend({
+      overrideProperties: {
+        id: {
+          type: 'number',
+          default: -1
+        }
+      }
+    });
+    var Model4 = factory.create(schema4, Base4);
+
+    var Base5 = Model4.extend({
+      overrideProperties: {
+        id: {
+          type: 'number',
+          default: -2
+        }
+      }
+    });
+    var Model5 = factory.create(schema4, Base5);
+
+    Model3.schema.properties.id.default.should.equal(0);
+    Model4.schema.properties.id.default.should.equal( -1 );
+    Model5.schema.properties.id.default.should.equal( -2 );
+    var m4 = new Model4();
+    var m3 = new Model3();
+    var m5 = new Model5();
+    m4.id.should.equal( -1 );
+    m3.id.should.equal(0);
+    m5.id.should.equal( -2 );
   });
 });
