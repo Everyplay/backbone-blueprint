@@ -70,12 +70,12 @@ var schema2 = {
     value: {
       type: 'string'
     },
-    parent: {
+    /*parent: {
       $ref: 'schemas/foo1',
       references: {
         id: 'parent_id'
       }
-    }
+    }*/
   }
 };
 
@@ -202,8 +202,6 @@ describe('Test SchemaFactory', function () {
     bar.id.should.equal(1);
     bar.schema.id.should.equal(schema2.id);
     bar.identify().should.equal('foo2');
-    bar.get('parent').identify().should.equal('foo');
-    bar.get('parent').id.should.equal(m.id);
   });
 
   it('should init Collection reference', function() {
