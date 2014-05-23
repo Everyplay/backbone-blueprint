@@ -23,7 +23,8 @@ var schema1 = {
       default: 'now'
     },
     foo2_id: {
-      type: 'number'
+      type: 'number',
+      conversion: 'id'
     },
     coll_id: {
       type: 'number'
@@ -157,6 +158,13 @@ describe('Test SchemaFactory', function () {
         return Foo4BaseCollection;
       }
       return CustomFactory.__super__._getBaseCollectionForSchemaId.apply(this, arguments);
+    },
+    getConversionFunction: function(conversion) {
+      if (conversion === 'id') {
+        return function(attr) {
+          return Number(attr);
+        };
+      }
     }
   });
 
