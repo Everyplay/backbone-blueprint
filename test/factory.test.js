@@ -2,6 +2,7 @@ var should = require('chai').should();
 var BaseModel = require('..').Model;
 var BaseCollection = require('..').Collection;
 var SchemaFactory = require('..').SchemaFactory;
+var util = require('util');
 
 var schema1 = {
   id: 'schemas/foo1',
@@ -151,22 +152,27 @@ describe('Test SchemaFactory', function () {
     }
   });
 
-  var CustomFactory = SchemaFactory.extend({
-    _getBaseCollectionForSchemaId: function(schemaId, options) {
-      options = options || {};
-      if (schemaId === 'schemas/foo4' && options.propertyName === 'parents') {
-        return Foo4BaseCollection;
-      }
-      return CustomFactory.__super__._getBaseCollectionForSchemaId.apply(this, arguments);
-    },
-    getConversionFunction: function(conversion) {
-      if (conversion === 'id') {
-        return function(attr) {
-          return Number(attr);
-        };
-      }
+  var CustomFactory = function CustomFactory(options) {
+    SchemaFactory.call(this, options);
+  };
+
+  util.inherits(CustomFactory, SchemaFactory);
+
+  CustomFactory.prototype._getBaseCollectionForSchemaId = function(schemaId, options) {
+    options = options || {};
+    if (schemaId === 'schemas/foo4' && options.propertyName === 'parents') {
+      return Foo4BaseCollection;
     }
-  });
+    return CustomFactory.super_.prototype._getBaseCollectionForSchemaId.apply(this, arguments);
+  };
+
+  CustomFactory.prototype.getConversionFunction = function(conversion) {
+    if (conversion === 'id') {
+      return function(attr) {
+        return Number(attr);
+      };
+    }
+  };
 
   var factory;
   var Model;
