@@ -174,7 +174,7 @@ describe('Test SchemaFactory', function () {
   var Model3;
 
   before(function() {
-    factory = new CustomFactory();
+    factory = new CustomFactory({baseModel: BaseModel, baseCollection: BaseCollection});
   });
 
   it('should register schemas', function() {
