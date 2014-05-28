@@ -91,6 +91,10 @@ var personSchema = exports.personSchema = {
       type: 'string',
       default: 'mr'
     },
+    fullname: {
+      type: 'string',
+      virtual: true
+    },
     enabled: {
       type: 'boolean',
       default: false

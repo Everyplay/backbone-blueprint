@@ -27,6 +27,11 @@ describe('Test virtualProperties', function () {
       model.get('fullname').should.equal('Mr. James Bond');
     });
 
+    it('should not include fullname in toJSON by default', function() {
+      var json = model.toJSON();
+      should.not.exist(json.fullname);
+    });
+
     it('should include fullname in JSON', function() {
       var json = model.toJSON({includeVirtualProperties: true});
       json.fullname.should.equal('Mr. James Bond');
@@ -81,6 +86,11 @@ describe('Test virtualProperties', function () {
       model.set({fullname: 'New Name', id: 1});
       model.get('fullname').should.equal('Mr. New Name');
       model.get('id').should.equal(1);
+    });
+
+    it('should not include fullname in toJSON by default', function() {
+      var json = model.toJSON();
+      should.not.exist(json.fullname);
     });
 
     it('should include fullname in JSON', function() {
