@@ -47,7 +47,12 @@ var companySchema = {
     id: {
       type: 'integer'
     },
-    name: { type: 'string' }
+    name: {
+      type: 'string'
+    },
+    country: {
+      type: 'string'
+    }
   },
   projection: {
     minimal: {
@@ -103,7 +108,10 @@ var personSchema = exports.personSchema = {
       type: 'relation',
       model: Company,
       roles: ['admin'],
-      references: {id: 'company_id'}
+      references: {id: 'company_id'},
+      values: {
+        country: 'GB'
+      }
     },
     spouse: {
       type: 'relation',
@@ -112,7 +120,10 @@ var personSchema = exports.personSchema = {
     },
     addresses : {
       type: 'relation',
-      collection: Addresses
+      collection: Addresses,
+      values: {
+        address_type: 'foo'
+      }
     }
   },
   projection: {

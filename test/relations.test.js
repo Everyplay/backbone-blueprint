@@ -26,6 +26,7 @@ describe('Test relations', function() {
     employee.get('title').should.equal('mr');
     employee.get('employer').get('id').should.equal(222);
     employee.get('employer').parent.should.equal(employee);
+    employee.get('employer').get('country').should.equal('GB');
     employee.get('spouse').get('id').should.equal(3300);
     should.not.exist(employee.get('spouse').get('employer'));
     employee.get('addresses').at(0).get('country').should.equal('GB');
@@ -48,6 +49,7 @@ describe('Test relations', function() {
       country: 'GB'
     }]);
     employee2.get('addresses').at(0).should.be.ok;
+    employee2.get('addresses').options.address_type.should.equal('foo');
     employee2.set('spouse_id', 3333);
     employee2.get('spouse').get('id').should.equal(3333);
   });
