@@ -40,6 +40,7 @@ describe('Test relations', function() {
       firstName: 'Jane',
       surname: 'Foo',
     });
+
     should.not.exist(employee2.get('addresses'));
     should.not.exist(employee2.get('employer'));
     should.not.exist(employee2.get('spouse'));

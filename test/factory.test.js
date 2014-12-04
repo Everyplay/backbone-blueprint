@@ -229,7 +229,9 @@ describe('Test SchemaFactory', function () {
   });
 
   it('should init collection reference if default is []', function() {
-    var m = new Model();
+    var m = new Model({
+      coll_id: 1
+    });
     m.get('coll').length.should.equal(0);
   });
 
