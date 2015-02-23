@@ -92,6 +92,10 @@ var personSchema = exports.personSchema = {
     surname: {
       type: 'string'
     },
+    birthDate: {
+      type: 'date',
+      required: false
+    },
     title: {
       type: 'string',
       default: 'mr'

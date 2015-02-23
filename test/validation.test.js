@@ -21,6 +21,14 @@ describe('Test validation', function() {
     employee.isValid().should.equal(true);
   });
 
+  it('should not validate invalid dates', function() {
+    var person = new Person({
+      firstName: 'Foo',
+      birthDate: 'invalid'
+    });
+    person.isValid().should.equal(false);
+  });
+
   it('should add custom validator', function() {
     var validator = Person.prototype.validator;
     validator.attributes.contains = function validateContains(instance, schema, options, ctx) {
