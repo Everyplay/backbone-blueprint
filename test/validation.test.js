@@ -27,6 +27,7 @@ describe('Test validation', function() {
       birthDate: 'invalid'
     });
     person.isValid().should.equal(false);
+    person.validationError.length.should.equal(1);
   });
 
   it('should add custom validator', function() {
