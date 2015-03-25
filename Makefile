@@ -17,7 +17,7 @@ MOCHA-OPTS = --reporter $(REPORTER) \
 		--recursive \
 		--colors
 
-test: jshint jscs
+test: lint
 	@NODE_ENV=test $(BIN)/mocha \
 		$(MOCHA-OPTS) \
 		$(GREP_CMND)
@@ -31,8 +31,6 @@ test-d:
 		$(GREP_CMND)
 .PHONY: test-d
 
-jshint:
-	@$(BIN)/jshint $(SRC_FILES)
+lint:
+	npm run lint
 
-jscs:
-	@$(BIN)/jscs .

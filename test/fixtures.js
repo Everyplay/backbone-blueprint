@@ -65,7 +65,7 @@ var Company = exports.Company = Model.extend({
   type: 'company',
   schema: companySchema,
   initialize: function (attrs, options) {
-    options = options || {};
+    options = options || {};
     Company.__super__.initialize.call(this, attrs, options);
     this.parent = options.parent;
   }
@@ -98,7 +98,7 @@ var personSchema = exports.personSchema = {
     },
     title: {
       type: 'string',
-      default: 'mr'
+      'default': 'mr'
     },
     fullname: {
       type: 'string',
@@ -106,7 +106,7 @@ var personSchema = exports.personSchema = {
     },
     enabled: {
       type: 'boolean',
-      default: false
+      'default': false
     },
     employer: {
       type: 'relation',
@@ -122,7 +122,7 @@ var personSchema = exports.personSchema = {
       '$ref': '#',
       references: {id: 'spouse_id'}
     },
-    addresses : {
+    addresses: {
       type: 'relation',
       collection: Addresses,
       values: {
@@ -178,7 +178,7 @@ var FooCompany = Company.extend({
 });
 
 var dynamicSchema = blueprint.Schema.extendSchema(personSchema, {
-  properties : {
+  properties: {
     dynamic_relation: {
       type: 'relation',
       model: function(attrs) {

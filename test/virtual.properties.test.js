@@ -1,6 +1,5 @@
 var should = require('chai').should();
 var fixtures = require('./fixtures');
-var _ = require('lodash');
 
 describe('Test virtualProperties', function () {
   describe('simple virtual property', function() {
@@ -77,12 +76,12 @@ describe('Test virtualProperties', function () {
       model.get('fullname').should.equal('Mr. James Bond');
     });
 
-    it('should set fullname', function(){
+    it('should set fullname', function() {
       model.set('fullname', 'Test Name');
       model.get('fullname').should.equal('Mr. Test Name');
     });
 
-    it('should set fullname as object', function(){
+    it('should set fullname as object', function() {
       model.set({fullname: 'New Name', id: 1});
       model.get('fullname').should.equal('Mr. New Name');
       model.get('id').should.equal(1);

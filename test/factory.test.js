@@ -17,11 +17,11 @@ var schema1 = {
     },
     enabled: {
       type: 'boolean',
-      default: false
+      'default': false
     },
     created_at: {
       type: 'date',
-      default: 'now'
+      'default': 'now'
     },
     foo2_id: {
       type: 'number',
@@ -51,7 +51,7 @@ var schema1 = {
     coll: {
       type: 'array',
       $ref: 'schemas/foo3',
-      default: [],
+      'default': [],
       references: {
         coll_id: 'coll_id'
       }
@@ -71,13 +71,7 @@ var schema2 = {
     },
     value: {
       type: 'string'
-    },
-    /*parent: {
-      $ref: 'schemas/foo1',
-      references: {
-        id: 'parent_id'
-      }
-    }*/
+    }
   }
 };
 
@@ -100,12 +94,12 @@ var schema4 = {
   properties: {
     id: {
       type: 'number',
-      default: 0
+      'default': 0
     },
     parents: {
       type: 'array',
       $ref: '#',
-      default: [],
+      'default': [],
       references: {
         child_id: 'id'
       }
@@ -114,6 +108,12 @@ var schema4 = {
 };
 
 describe('Test SchemaFactory', function () {
+  var Foo2BaseModel = BaseModel.extend({
+    identify: function() {
+      return 'foo2';
+    }
+  });
+
   var FooBaseModel = BaseModel.extend({
     identify: function() {
       return 'foo';
@@ -125,15 +125,10 @@ describe('Test SchemaFactory', function () {
         }
       },
       dyn: {
-        model: function(attrs) {
+        model: function() {
           return new Foo2BaseModel();
         }
       }
-    }
-  });
-  var Foo2BaseModel = BaseModel.extend({
-    identify: function() {
-      return 'foo2';
     }
   });
 
@@ -249,7 +244,7 @@ describe('Test SchemaFactory', function () {
       overrideProperties: {
         id: {
           type: 'number',
-          default: -1
+          'default': -1
         }
       }
     });
@@ -259,7 +254,7 @@ describe('Test SchemaFactory', function () {
       overrideProperties: {
         id: {
           type: 'number',
-          default: -2
+          'default': -2
         }
       }
     });

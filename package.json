@@ -4,7 +4,9 @@
   "description": "Create object hierarchies based on json schema",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha -R spec",
+    "lint": "eslint *.js lib/*.js test/*.js",
+    "precommit": "npm run lint && npm run test"
   },
   "author": {
     "name": "mikkolehtinen",
@@ -21,17 +23,17 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "sanitizer": "~0.1.1",
-    "backbone": "~1.1.0",
-    "jsonschema": "~0.4.0",
-    "lodash": "~2.4.1",
-    "jscs": "~1.2.4"
+    "backdash": "^1.1.2-2.4.1",
+    "jsonschema": "^1.0.1",
+    "lodash": "^3.5.0",
+    "sanitizer": "^0.1.2"
   },
   "devDependencies": {
-    "mocha": "~1.13.0",
-    "chai": "~1.8.1",
     "backbone-db": "~0.1.2",
-    "jshint": "~2.4.2"
+    "chai": "~1.8.1",
+    "eslint": "^0.17.1",
+    "husky": "^0.7.0",
+    "mocha": "~1.13.0"
   },
   "readmeFilename": "README.md",
   "bugs": {

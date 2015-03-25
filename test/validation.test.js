@@ -1,5 +1,4 @@
-var should = require('chai').should();
-var Model = require('..').Model;
+require('chai').should();
 var ValidatingModel = require('..').ValidatingModel;
 var Person = require('./fixtures').ValidatingPerson;
 var jsonschema = require('jsonschema');
@@ -32,9 +31,11 @@ describe('Test validation', function() {
 
   it('should add custom validator', function() {
     var validator = Person.prototype.validator;
-    validator.attributes.contains = function validateContains(instance, schema, options, ctx) {
+    validator.attributes.contains = function validateContains(instance, schema) {
       if (typeof instance !== 'string') return;
-      if (typeof schema.contains !== 'string') throw new jsonschema.SchemaError('"contains" expects a string', schema);
+      if (typeof schema.contains !== 'string') {
+        throw new jsonschema.SchemaError('"contains" expects a string', schema);
+      }
       if (instance.indexOf(schema.contains) < 0) {
         return 'does not contain the string ' + JSON.stringify(schema.contains);
       }
@@ -75,7 +76,7 @@ describe('Test validation', function() {
 
   it('should test custom validation', function() {
     var Foo = Person.extend({
-      customValidation: function(attributes, options) {
+      customValidation: function(attributes) {
         var err = new Error('must be enabled');
         err.stack = 'must be enabled';
         if (!attributes.enabled) return [err];

@@ -13,11 +13,11 @@ describe('Test schema', function () {
       },
       date: {
         type: 'date',
-        default: function() {
+        'default': function() {
           return new Date();
         }
       },
-      nohtml:  {
+      nohtml: {
         type: 'sanitized_string'
       },
       nohtmlInJSONOutput: {
@@ -42,6 +42,13 @@ describe('Test schema', function () {
   it('should set default attributes correctly', function(done) {
     var now = new Date();
     var date;
+
+    function testAnother() {
+      var t = new TestModel();
+      t.get('date').should.be.above(date);
+      done();
+    }
+
     function proceed() {
       var t = new TestModel();
       date = t.get('date');
@@ -50,11 +57,6 @@ describe('Test schema', function () {
       setTimeout(testAnother, 10);
     }
 
-    function testAnother() {
-      var t = new TestModel();
-      t.get('date').should.be.above(date);
-      done();
-    }
 
     setTimeout(proceed, 10);
   });
@@ -65,7 +67,8 @@ describe('Test schema', function () {
       foo: 'bar',
       nohtml: '<a onmouseover="javascript:alert()" href="javascript:alert()">' +
         '<script type="text/javascript">alert("kissa")</script>' +
-        '<iframe src="http://google.com"></iframe><a style="font-size: 1000px" href="test">X&S&S</a></a>'
+        '<iframe src="http://google.com"></iframe>' +
+        '<a style="font-size: 1000px" href="test">X&S&S</a></a>'
     });
     (typeof model.get('id')).should.equal('number');
     model.get('foo').should.equal('foo-bar');
@@ -78,13 +81,16 @@ describe('Test schema', function () {
       foo: 'bar',
       nohtmlInJSONOutput: '<a onmouseover="javascript:alert()" href="javascript:alert()">' +
         '<script type="text/javascript">alert("kissa")</script>' +
-        '<iframe src="http://google.com"></iframe><a style="font-size: 1000px" href="test">X&S&S</a></a>'
+        '<iframe src="http://google.com"></iframe>' +
+        '<a style="font-size: 1000px" href="test">X&S&S</a></a>'
     });
     (typeof model.get('id')).should.equal('number');
     model.get('foo').should.equal('foo-bar');
-    model.get('nohtmlInJSONOutput').should.equal('<a onmouseover="javascript:alert()" href="javascript:alert()">' +
+    model.get('nohtmlInJSONOutput').should.equal(
+      '<a onmouseover="javascript:alert()" href="javascript:alert()">' +
       '<script type="text/javascript">alert("kissa")</script>' +
-      '<iframe src="http://google.com"></iframe><a style="font-size: 1000px" href="test">X&S&S</a></a>');
+      '<iframe src="http://google.com"></iframe>' +
+      '<a style="font-size: 1000px" href="test">X&S&S</a></a>');
 
     model.toJSON().nohtmlInJSONOutput.should.equal('<a><iframe></iframe><a>X&amp;S&amp;S</a></a>');
 
@@ -105,6 +111,5 @@ describe('Test schema', function () {
     street.type.should.equal('string');
     should.not.exist(addressSchema.properties.street.required);
   });
-
 
 });

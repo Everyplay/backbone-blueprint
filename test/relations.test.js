@@ -38,7 +38,7 @@ describe('Test relations', function() {
     var employee2 = new Employee({
       id: 3341,
       firstName: 'Jane',
-      surname: 'Foo',
+      surname: 'Foo'
     });
 
     should.not.exist(employee2.get('addresses'));
@@ -173,7 +173,7 @@ describe('Test relations', function() {
 
   it('should not save relations, unless specified so', function(done) {
     var id;
-    var employee = new Employee({
+    var _employee = new Employee({
       firstName: 'John',
       surname: 'Foo',
       company_id: 222,
@@ -186,9 +186,9 @@ describe('Test relations', function() {
     });
 
     function save(cb) {
-      employee.save(null, {
+      _employee.save(null, {
         success: function() {
-          id = employee.id;
+          id = _employee.id;
           cb();
         },
         error: function(err) {
@@ -198,10 +198,10 @@ describe('Test relations', function() {
     }
 
     function fetch(cb) {
-      employee = new Employee({
+      _employee = new Employee({
         id: id
       });
-      employee.fetch({
+      _employee.fetch({
         success: function() {
           cb();
         },
@@ -213,10 +213,10 @@ describe('Test relations', function() {
 
     save(function(err) {
       should.not.exist(err);
-      fetch(function(err) {
-        should.not.exist(err);
-        should.not.exist(employee.get('addresses'));
-        employee.get('spouse').get('id').should.equal(3300);
+      fetch(function(_err) {
+        should.not.exist(_err);
+        should.not.exist(_employee.get('addresses'));
+        _employee.get('spouse').get('id').should.equal(3300);
         done();
       });
     });
@@ -234,7 +234,7 @@ describe('Test relations', function() {
         addresses: {
           type: 'relation',
           collection: Addresses,
-          default: [],
+          'default': [],
           references: {
             id: 'company_id'
           }
